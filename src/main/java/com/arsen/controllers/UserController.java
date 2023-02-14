@@ -1,14 +1,18 @@
 package com.arsen.controllers;
 
 import com.arsen.models.User;
+import com.arsen.security.DetailsUser;
 import com.arsen.services.UserService;
 import com.arsen.util.UserValidator;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @Controller
 @RequestMapping("user")
@@ -22,6 +26,13 @@ public class UserController {
         this.validator = validator;
     }
 
+    @GetMapping("/info")
+    public String info() {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+        DetailsUser detailsUser = (DetailsUser) authentication.getPrincipal();
+        System.out.println(detailsUser.getUser());
+        return "redirect:/user";
+    }
 
     @GetMapping("/{id}")
     public String getUserById(@PathVariable Long id, Model model) {

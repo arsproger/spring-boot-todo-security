@@ -1,6 +1,7 @@
 package com.arsen.util;
 
 import com.arsen.models.User;
+import com.arsen.services.DetailsUserService;
 import com.arsen.services.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -10,10 +11,12 @@ import org.springframework.validation.Validator;
 @Component
 public class UserValidator implements Validator {
     private final UserService userService;
+    private final DetailsUserService detailsUserService;
 
     @Autowired
-    public UserValidator(UserService userService) {
+    public UserValidator(UserService userService, DetailsUserService detailsUserService) {
         this.userService = userService;
+        this.detailsUserService = detailsUserService;
     }
 
     @Override
@@ -25,7 +28,8 @@ public class UserValidator implements Validator {
     public void validate(Object target, Errors errors) {
         User user = (User) target;
 
-        if (userService.getByEmail(user.getEmail()).isPresent())
+        detailsUserService.loadUserByUsername(user.getEmail());
+        if (userService.findByEmail(user.getEmail()).isPresent())
             errors.rejectValue("email", "", "Email уже зарегистрирован!");
     }
 }

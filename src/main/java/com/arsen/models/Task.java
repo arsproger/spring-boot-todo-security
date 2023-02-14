@@ -1,14 +1,12 @@
 package com.arsen.models;
 
 import com.arsen.enams.TaskStatus;
-import jakarta.persistence.*;
-import jakarta.validation.constraints.NotEmpty;
-import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Size;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
+import javax.persistence.*;
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 @Entity
@@ -33,7 +31,7 @@ public class Task {
 
     @NotNull(message = "Deadline не может быть пустым!")
     @Column(name = "deadline")
-    @Temporal(TemporalType.TIMESTAMP)
+//    @Temporal(TemporalType.TIMESTAMP)
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
     private LocalDateTime deadline;
 

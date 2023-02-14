@@ -18,7 +18,6 @@ public class UserService {
     }
 
     public void newUser(User user) {
-        ;
         userRepository.save(user);
     }
 
@@ -35,7 +34,7 @@ public class UserService {
         return userRepository.findById(id).orElse(null);
     }
 
-    public Optional<User> getByEmail(String email) {
+    public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
 
@@ -54,4 +53,5 @@ public class UserService {
         userRepository.save(user);
         return "User id: " + id + " new name " + name;
     }
+
 }

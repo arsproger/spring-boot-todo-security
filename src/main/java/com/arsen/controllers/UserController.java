@@ -4,7 +4,6 @@ import com.arsen.models.Task;
 import com.arsen.models.User;
 import com.arsen.security.DetailsUser;
 import com.arsen.services.TaskService;
-import com.arsen.util.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -18,12 +17,10 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("user")
 public class UserController {
-    private final UserValidator validator;
     private final TaskService taskService;
 
     @Autowired
-    public UserController(UserValidator validator, TaskService taskService) {
-        this.validator = validator;
+    public UserController(TaskService taskService) {
         this.taskService = taskService;
     }
 
@@ -36,7 +33,6 @@ public class UserController {
     @GetMapping
     public String show(Model model) {
         model.addAttribute("user", getUser());
-
         return "show";
     }
 

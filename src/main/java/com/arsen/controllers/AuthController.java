@@ -25,6 +25,11 @@ public class AuthController {
         this.registrationService = registrationService;
     }
 
+    @GetMapping("/main")
+    public String main() {
+        return "auth/main";
+    }
+
     @GetMapping("/login")
     public String loginPage() {
         return "auth/login";

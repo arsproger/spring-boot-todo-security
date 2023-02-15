@@ -34,11 +34,11 @@ public class User {
     private String email;
 
     @Column(name = "password")
-    @Size(min = 8, max = 30, message = "Пароль должен быть в диапазоне 8-30 символов!")
+    @Size(min = 8, message = "Пароль должен содержать больше 8 символов!")
     private String password;
 
     @Cascade(org.hibernate.annotations.CascadeType.DELETE)
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner", fetch = FetchType.EAGER)
     private List<Task> tasks;
 
     public User(String name, String email, String password) {

@@ -47,7 +47,7 @@
 </head>
 <body>
 <h1>Edit task form</h1>
-<form th:method="PATCH" th:action="@{/task/{id}(id=${task.getId()})}" th:object="${task}">
+<form th:method="PATCH" th:action="@{/user/task/{id}(id=${task.getId()})}" th:object="${task}">
     <div style="color : red" th:if="${#fields.hasErrors('header')}" th:errors="*{header}">Error</div>
     <label for="header">Header: </label>
     <input type="text" th:field="*{header}" id="header"/>
@@ -71,6 +71,6 @@
 </form>
 <br><br>
 <hr>
-<a th:href="@{/user/{id}(id=${task.getOwner().getId()})}">Cancel</a>
+<a th:href="@{/user}">Cancel</a>
 </body>
 </html>

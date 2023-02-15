@@ -47,7 +47,7 @@
 </head>
 <body>
 <h1>New task form</h1>
-<form th:method="POST" th:action="@{/task/save/{userId}(userId=${userId})}" th:object="${task}">
+<form th:method="POST" th:action="@{/user/task/new}" th:object="${task}">
   <div style="color : red" th:if="${#fields.hasErrors('header')}" th:errors="*{header}">Error</div>
   <label for="header">Header: </label>
   <input type="text" th:field="*{header}" id="header"/>
@@ -64,6 +64,6 @@
 </form>
 <br><br>
 <hr>
-<a th:href="@{/user/{id}(id=${userId})}">Cancel</a>
+<a th:href="@{/user}">Cancel</a>
 </body>
 </html>

@@ -1,8 +1,9 @@
 package com.arsen.controllers;
 
+import com.arsen.models.Task;
 import com.arsen.models.User;
 import com.arsen.security.DetailsUser;
-import com.arsen.services.UserService;
+import com.arsen.services.TaskService;
 import com.arsen.util.UserValidator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
@@ -17,55 +18,64 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("user")
 public class UserController {
-    private final UserService service;
     private final UserValidator validator;
+    private final TaskService taskService;
 
     @Autowired
-    public UserController(UserService service, UserValidator validator) {
-        this.service = service;
+    public UserController(UserValidator validator, TaskService taskService) {
         this.validator = validator;
+        this.taskService = taskService;
     }
 
-    @GetMapping("/info")
-    public String info() {
+    public User getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         DetailsUser detailsUser = (DetailsUser) authentication.getPrincipal();
-        System.out.println(detailsUser.getUser());
-        return "redirect:/user";
+        return detailsUser.getUser();
     }
 
-    @GetMapping("/{id}")
-    public String getUserById(@PathVariable Long id, Model model) {
-        model.addAttribute("user", service.getById(id));
+    @GetMapping
+    public String show(Model model) {
+        model.addAttribute("user", getUser());
+
         return "show";
     }
 
-    @GetMapping()
-    public String getAllUser(Model model) {
-        model.addAttribute("users", service.getAllUser());
-        return "index";
+    @GetMapping("/task/new")
+    public String newTask(@ModelAttribute("task") Task task) {
+        return "task-new";
     }
 
-    @GetMapping("/new")
-    public String newPerson(@ModelAttribute("user") User user) {
-        return "user-new";
-    }
+    @PostMapping("task/new")
+    public String saveTask(@ModelAttribute("task") @Valid Task task, BindingResult bindingResult) {
+        if(bindingResult.hasErrors())
+            return "task-new";
 
-    @PostMapping()
-    public String create(@ModelAttribute("user") @Valid User user, BindingResult bindingResult) {
-        validator.validate(user, bindingResult);
+        taskService.newTask(getUser().getId(), task);
 
-        if (bindingResult.hasErrors())
-            return "user-new";
-
-        service.newUser(user);
         return "redirect:/user";
     }
 
-    @DeleteMapping("/{id}")
-    public String delete(@PathVariable long id) {
-        service.deleteUserById(id);
+    @GetMapping("/task/update/{id}")
+    public String updateTask(Model model, @PathVariable("id") Long id) {
+        model.addAttribute("task", taskService.getById(id));
+
+        return "task-edit";
+    }
+
+    @PatchMapping("/task/{id}")
+    public String updateTask(@ModelAttribute("task") @Valid Task task,
+                             BindingResult bindingResult, @PathVariable Long id) {
+        if(bindingResult.hasErrors())
+            return "task-edit";
+
+        taskService.updateTaskById(id, task);
         return "redirect:/user";
     }
 
+    @GetMapping("/task/{id}")
+    public String deleteTask(@PathVariable("id") Long id) {
+        taskService.deleteTaskById(id);
+
+        return "redirect:/user";
+    }
 }

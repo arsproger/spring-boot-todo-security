@@ -64,8 +64,8 @@
     <td th:text="${task.deadline}"></td>
     <td th:text="${task.taskStatus}"></td>
     <td>
-      <a th:href="@{/task/{id}/edit(id=${task.getId()})}" class="btn btn-primary">Update</a>
-      <a th:href="@{/task/delete/{id}(id=${task.getId()})}" class="btn btn-danger"
+      <a th:href="@{/user/task/update/{id}(id=${task.getId()})}" class="btn btn-primary">Update</a>
+      <a th:href="@{/user/task/{id}(id=${task.getId()})}" class="btn btn-danger"
          onclick="return confirm('Вы уверены, что хотите удалить этот task?')">Delete</a>
     </td>
   </tr>
@@ -79,17 +79,11 @@
     <br>
   </div>
 <hr>
-<a th:href="@{/task/new/{id}(id=${user.getId()})}" class="btn btn-success">New task</a>
-<br>
-<hr>
-<a th:href="@{/user}" class="btn btn-secondary">Main page</a>
-<br>
-<hr>
-<form th:method="DELETE" th:action="@{/user/{id}(id=${user.getId()})}">
-  <input type="submit" value="Delete user"
-         class="btn btn-danger"
-         onclick="return confirm('Вы уверены, что хотите удалить этого пользователя?')"/>
+<a th:href="@{/user/task/new}" class="btn btn-success">New task</a>
+<br><hr>
+<form th:action="@{/logout}" th:method="POST" class="btn btn-damage"
+      onclick="return confirm('Вы уверены, что хотите выйти?')">
+  <input type="submit" value="Logout"/>
 </form>
-<br><br>
 </body>
 </html>

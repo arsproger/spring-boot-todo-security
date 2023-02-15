@@ -6,8 +6,10 @@ import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import javax.validation.constraints.*;
-import java.time.LocalDateTime;
+import javax.validation.constraints.NotEmpty;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Size;
+import java.util.Date;
 
 @Entity
 @Table(name = "Tasks")
@@ -31,11 +33,11 @@ public class Task {
 
     @NotNull(message = "Deadline не может быть пустым!")
     @Column(name = "deadline")
-//    @Temporal(TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm")
-    private LocalDateTime deadline;
+    @Temporal(value = TemporalType.TIMESTAMP)
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") // 2023-02-12T15:44
+    private Date deadline;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "user_id", referencedColumnName = "id")
     private User owner;
 
@@ -43,7 +45,7 @@ public class Task {
     @Enumerated(EnumType.STRING)
     private TaskStatus taskStatus;
 
-    public Task(User owner, String header, String description, LocalDateTime deadline, TaskStatus taskStatus) {
+    public Task(User owner, String header, String description, Date deadline, TaskStatus taskStatus) {
         this.owner = owner;
         this.header = header;
         this.description = description;

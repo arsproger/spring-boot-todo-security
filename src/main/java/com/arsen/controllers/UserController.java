@@ -7,6 +7,7 @@ import com.arsen.services.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,15 +25,16 @@ public class UserController {
         this.taskService = taskService;
     }
 
-    public User getUser() {
+    public DetailsUser getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         DetailsUser detailsUser = (DetailsUser) authentication.getPrincipal();
-        return detailsUser.getUser();
+        return detailsUser;
     }
 
     @GetMapping
     public String show(Model model) {
-        model.addAttribute("user", getUser());
+        UserDetails userDetails = (UserDetails) new User(getUser().getUsername(), getUser().getPassword(), getUser().getAuthorities());
+        model.addAttribute("user", getUser().getUser());
         return "show";
     }
 
@@ -46,7 +48,7 @@ public class UserController {
         if(bindingResult.hasErrors())
             return "task-new";
 
-        taskService.newTask(getUser().getId(), task);
+        taskService.newTask(getUser().getUser().getId(), task);
 
         return "redirect:/user";
     }

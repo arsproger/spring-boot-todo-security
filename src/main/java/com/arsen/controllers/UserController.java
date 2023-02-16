@@ -2,39 +2,49 @@ package com.arsen.controllers;
 
 import com.arsen.models.Task;
 import com.arsen.models.User;
+import com.arsen.repositories.TaskRepository;
 import com.arsen.security.DetailsUser;
 import com.arsen.services.TaskService;
+import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 @Controller
-@RequestMapping("user")
+@RequestMapping("/user")
 public class UserController {
     private final TaskService taskService;
+    private final TaskRepository taskRepository;
 
     @Autowired
-    public UserController(TaskService taskService) {
+    public UserController(TaskService taskService,
+                          TaskRepository taskRepository) {
         this.taskService = taskService;
+        this.taskRepository = taskRepository;
     }
 
-    public DetailsUser getUser() {
+    public User getUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         DetailsUser detailsUser = (DetailsUser) authentication.getPrincipal();
-        return detailsUser;
+        return detailsUser.getUser();
     }
 
     @GetMapping
     public String show(Model model) {
-        UserDetails userDetails = (UserDetails) new User(getUser().getUsername(), getUser().getPassword(), getUser().getAuthorities());
-        model.addAttribute("user", getUser().getUser());
+        User user = getUser();
+        model.addAttribute("user", user);
+//        model.addAttribute("tasks", taskRepository.getTasksByUser(user.getId()));
+        model.addAttribute("tasks", taskRepository.findByOwner(user));
+
         return "show";
     }
 
@@ -48,7 +58,7 @@ public class UserController {
         if(bindingResult.hasErrors())
             return "task-new";
 
-        taskService.newTask(getUser().getUser().getId(), task);
+        taskService.newTask(getUser().getId(), task);
 
         return "redirect:/user";
     }

@@ -47,7 +47,7 @@
 <h3>Email</h3>
 <p th:text="${user.getEmail()}">VALUE</p>
 <h3>Tasks list</h3>
-  <table th:if="${not user.getTasks().isEmpty()}" class="styled-table">
+  <table th:if="${not tasks.isEmpty()}" class="styled-table">
   <thead>
   <tr>
     <th>Id</th>
@@ -58,7 +58,7 @@
   </tr>
   </thead>
   <tbody>
-  <tr th:each="task : ${user.getTasks()}">
+  <tr th:each="task : ${tasks}">
     <td th:text="${task.id}"></td>
     <td th:text="${task.header}"></td>
     <td th:text="${task.deadline}"></td>
@@ -71,7 +71,7 @@
   </tr>
   </tbody>
 </table>
-  <div th:if="${user.getTasks().isEmpty()}">
+  <div th:if="${tasks.isEmpty()}">
     <br>
     <h4 style="color: red; font-family: Arial">
       <span th:text="${'У пользователя ' + user.getName()} + ' еще нет Task\'ов!'"></span>

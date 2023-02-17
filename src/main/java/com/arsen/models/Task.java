@@ -34,7 +34,7 @@ public class Task {
     @NotNull(message = "Deadline не может быть пустым!")
     @Column(name = "deadline")
     @Temporal(value = TemporalType.TIMESTAMP)
-    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm") // 2023-02-12T15:44
+    @DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")
     private Date deadline;
 
     @ManyToOne(fetch = FetchType.EAGER)

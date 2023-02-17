@@ -5,7 +5,6 @@ import com.arsen.models.User;
 import com.arsen.repositories.TaskRepository;
 import com.arsen.security.DetailsUser;
 import com.arsen.services.TaskService;
-import org.hibernate.mapping.Collection;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -15,16 +14,13 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 @Controller
 @RequestMapping("/user")
 public class UserController {
     private final TaskService taskService;
     private final TaskRepository taskRepository;
-
+    
     @Autowired
     public UserController(TaskService taskService,
                           TaskRepository taskRepository) {
@@ -42,7 +38,6 @@ public class UserController {
     public String show(Model model) {
         User user = getUser();
         model.addAttribute("user", user);
-//        model.addAttribute("tasks", taskRepository.getTasksByUser(user.getId()));
         model.addAttribute("tasks", taskRepository.findByOwner(user));
 
         return "show";

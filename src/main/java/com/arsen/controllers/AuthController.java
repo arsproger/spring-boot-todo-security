@@ -43,10 +43,10 @@ public class AuthController {
 
     @PostMapping("/registration")
     public String performRegistration(@ModelAttribute("user") @Valid UserDTO userDTO,
-                                    BindingResult bindingResult) {
+                                      BindingResult bindingResult) {
         userValidator.validate(convertToUser(userDTO), bindingResult);
 
-        if(bindingResult.hasErrors())
+        if (bindingResult.hasErrors())
             return "auth/registration";
 
         registrationService.register(convertToUser(userDTO));

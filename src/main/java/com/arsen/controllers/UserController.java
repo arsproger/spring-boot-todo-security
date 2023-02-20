@@ -51,7 +51,7 @@ public class UserController {
 
     @PostMapping("task/new")
     public String saveTask(@ModelAttribute("task") @Valid TaskDTO taskDTO, BindingResult bindingResult) {
-        if(bindingResult.hasErrors())
+        if (bindingResult.hasErrors())
             return "task-new";
 
         taskService.newTask(getUser().getId(), convertToTask(taskDTO));
@@ -69,7 +69,7 @@ public class UserController {
     @PatchMapping("/task/{id}")
     public String updateTask(@ModelAttribute("task") @Valid TaskDTO taskDTO,
                              BindingResult bindingResult, @PathVariable Long id) {
-        if(bindingResult.hasErrors())
+        if (bindingResult.hasErrors())
             return "task-edit";
 
         taskService.updateTaskById(id, convertToTask(taskDTO));

@@ -8,6 +8,7 @@ import java.util.Collection;
 
 public class DetailsUser implements UserDetails {
     private User user;
+
     public DetailsUser(User user) {
         this.user = user;
     }

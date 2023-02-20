@@ -1,5 +1,6 @@
 package com.arsen.controllers;
 
+import com.arsen.dto.TaskDTO;
 import com.arsen.models.Task;
 import com.arsen.models.User;
 import com.arsen.repositories.TaskRepository;
@@ -20,7 +21,7 @@ import javax.validation.Valid;
 public class UserController {
     private final TaskService taskService;
     private final TaskRepository taskRepository;
-    
+
     @Autowired
     public UserController(TaskService taskService,
                           TaskRepository taskRepository) {
@@ -44,16 +45,16 @@ public class UserController {
     }
 
     @GetMapping("/task/new")
-    public String newTask(@ModelAttribute("task") Task task) {
+    public String newTask(@ModelAttribute("task") TaskDTO taskDTO) {
         return "task-new";
     }
 
     @PostMapping("task/new")
-    public String saveTask(@ModelAttribute("task") @Valid Task task, BindingResult bindingResult) {
+    public String saveTask(@ModelAttribute("task") @Valid TaskDTO taskDTO, BindingResult bindingResult) {
         if(bindingResult.hasErrors())
             return "task-new";
 
-        taskService.newTask(getUser().getId(), task);
+        taskService.newTask(getUser().getId(), convertToTask(taskDTO));
 
         return "redirect:/user";
     }
@@ -66,12 +67,12 @@ public class UserController {
     }
 
     @PatchMapping("/task/{id}")
-    public String updateTask(@ModelAttribute("task") @Valid Task task,
+    public String updateTask(@ModelAttribute("task") @Valid TaskDTO taskDTO,
                              BindingResult bindingResult, @PathVariable Long id) {
         if(bindingResult.hasErrors())
             return "task-edit";
 
-        taskService.updateTaskById(id, task);
+        taskService.updateTaskById(id, convertToTask(taskDTO));
         return "redirect:/user";
     }
 
@@ -80,5 +81,17 @@ public class UserController {
         taskService.deleteTaskById(id);
 
         return "redirect:/user";
+    }
+
+    private Task convertToTask(TaskDTO taskDTO) {
+        Task task = new Task();
+
+        task.setHeader(taskDTO.getHeader());
+        task.setDescription(taskDTO.getDescription());
+        task.setDeadline(taskDTO.getDeadline());
+        task.setOwner(taskDTO.getOwner());
+        task.setTaskStatus(taskDTO.getTaskStatus());
+
+        return task;
     }
 }

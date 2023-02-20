@@ -1,5 +1,6 @@
 package com.arsen.controllers;
 
+import com.arsen.dto.UserDTO;
 import com.arsen.models.User;
 import com.arsen.services.RegistrationService;
 import com.arsen.util.UserValidator;
@@ -36,20 +37,29 @@ public class AuthController {
     }
 
     @GetMapping("/registration")
-    public String registrationPage(@ModelAttribute("user") User user) {
+    public String registrationPage(@ModelAttribute("user") UserDTO userDTO) {
         return "auth/registration";
     }
 
     @PostMapping("/registration")
-    public String performRegistration(@ModelAttribute("user") @Valid User user,
+    public String performRegistration(@ModelAttribute("user") @Valid UserDTO userDTO,
                                     BindingResult bindingResult) {
-        userValidator.validate(user, bindingResult);
+        userValidator.validate(convertToUser(userDTO), bindingResult);
 
         if(bindingResult.hasErrors())
             return "auth/registration";
 
-        registrationService.register(user);
+        registrationService.register(convertToUser(userDTO));
 
         return "redirect:/auth/login";
+    }
+
+    private User convertToUser(UserDTO userDTO) {
+        User user = new User();
+        user.setName(userDTO.getName());
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(userDTO.getPassword());
+
+        return user;
     }
 }

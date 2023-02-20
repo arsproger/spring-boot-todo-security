@@ -2,7 +2,9 @@ package com.arsen.dto;
 
 import com.arsen.enams.TaskStatus;
 import com.arsen.models.User;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.Temporal;
@@ -13,8 +15,10 @@ import javax.validation.constraints.Size;
 import java.util.Date;
 
 @Data
+@NoArgsConstructor
+@AllArgsConstructor
 public class TaskDTO {
-    private final Long id;
+    private Long id;
 
     @NotEmpty(message = "Header не может быть пустым!")
     @Size(max = 20, message = "Превышено максимальное значение для поля header!")

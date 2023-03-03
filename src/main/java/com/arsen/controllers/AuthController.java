@@ -4,6 +4,7 @@ import com.arsen.dto.UserDTO;
 import com.arsen.models.User;
 import com.arsen.services.RegistrationService;
 import com.arsen.util.UserValidator;
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.validation.BindingResult;
@@ -17,11 +18,14 @@ import javax.validation.Valid;
 @Controller
 @RequestMapping("/auth")
 public class AuthController {
+    private final ModelMapper modelMapper;
     private final UserValidator userValidator;
     private final RegistrationService registrationService;
 
     @Autowired
-    public AuthController(UserValidator userValidator, RegistrationService registrationService) {
+    public AuthController(ModelMapper modelMapper, UserValidator userValidator,
+                          RegistrationService registrationService) {
+        this.modelMapper = modelMapper;
         this.userValidator = userValidator;
         this.registrationService = registrationService;
     }
@@ -55,11 +59,6 @@ public class AuthController {
     }
 
     private User convertToUser(UserDTO userDTO) {
-        User user = new User();
-        user.setName(userDTO.getName());
-        user.setEmail(userDTO.getEmail());
-        user.setPassword(userDTO.getPassword());
-
-        return user;
+        return modelMapper.map(userDTO, User.class);
     }
 }
